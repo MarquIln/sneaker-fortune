@@ -3,7 +3,7 @@ interface Player {
   increaseBalance: (amount: number) => void;
   decreaseBalance: (amount: number) => void;
   resetBalance: () => void;
-  setBalance: (amount: number) => void;
+  setBalance: (amount: number) => number;
   saveBalance: () => void;
   loadBalance: () => void;
 }
