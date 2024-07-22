@@ -1,14 +1,16 @@
+import { Button as ChakraButton } from '@chakra-ui/react';
+
 interface GambleButtonProps {
-  onClick: () => void;
+  text: string
+  onClick: () => void
+  size: string
+  isLoading: boolean
 }
 
-export const GambleButton = ({ onClick }: GambleButtonProps) => {
+export const GambleButton = ({ onClick, size, text, isLoading }: GambleButtonProps) => {
   return (
-    <button
-      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-      onClick={onClick}
-    >
-      Gamble
-    </button>
+    <ChakraButton isLoading={isLoading} onClick={onClick} className='flex bg-green-800 w-20 h-16 rounded-full' size={size}>
+      {text}
+    </ChakraButton>
   )
 }
