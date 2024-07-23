@@ -1,17 +1,25 @@
 'use client'
 
-import { useStore } from "@/context"
-import { checkLines } from "@/helpers/check-lines"
-import type { Image } from "@/types/images"
-import { Box, Flex, Text } from "@chakra-ui/react"
-import { useEffect, useState } from "react"
-import { initializeImages } from "../../helpers/inicialize-images"
-import { GambleButton } from "./gamble-button"
-import { ImageColumn } from "./image-column"
-import { MultipleGambleButton } from "./multiple-gamble-button"
+import { useStore } from '@/context'
+import { checkLines } from '@/helpers/check-lines'
+import type { Image } from '@/types/images'
+import { Box, Flex, Text, useDisclosure } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
+import { initializeImages } from '../../helpers/inicialize-images'
+import { GambleButton } from './gamble-button'
+import { ImageColumn } from './image-column'
+import { MultipleGambleButton } from './multiple-gamble-button'
 
 export const GameBoard = () => {
-  const { balance, increaseBalance, decreaseBalance, saveBalance, loadBalance, actualBet, getActualBet, setNumRounds, numRounds } = useStore()
+  const {
+    balance,
+    increaseBalance,
+    decreaseBalance,
+    saveBalance,
+    loadBalance,
+    getActualBet,
+    numRounds,
+  } = useStore()
   const [isLoading, setIsLoading] = useState(false)
   const [multipleIsLoading, setMultipleIsLoading] = useState(false)
   const [shuffledImages, setShuffledImages] = useState(initializeImages())
@@ -20,13 +28,11 @@ export const GameBoard = () => {
   const [animationKey, setAnimationKey] = useState(0)
   const [winningLineIndex, setWinningLineIndex] = useState<number | null>(null)
 
+  const { onOpen } = useDisclosure()
+
   useEffect(() => {
     loadBalance()
   }, [loadBalance])
-
-  const handleRoundsChange = (selectedRounds: number) => {
-    setNumRounds(selectedRounds)
-  }
 
   const handleGamble = async (rounds: number) => {
     if (balance <= 0) {
@@ -35,7 +41,7 @@ export const GameBoard = () => {
     }
 
     for (let i = 0; i < rounds; i++) {
-      if (balance <= 0) break;
+      if (balance <= 0) break
 
       if (rounds > 1) {
         setMultipleIsLoading(true)
@@ -44,22 +50,26 @@ export const GameBoard = () => {
       }
 
       setAnimate(true)
-      setAnimationKey((prevKey) => prevKey + 1);
+      setAnimationKey((prevKey) => prevKey + 1)
 
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 500))
 
       const newImages = initializeImages()
       setShuffledImages(newImages)
 
-      const imagesArray: Image[][] = [newImages.left, newImages.middle, newImages.right]
+      const imagesArray: Image[][] = [
+        newImages.left,
+        newImages.middle,
+        newImages.right,
+      ]
       const matches = checkLines(imagesArray)
 
       setShowMatches(Array(5).fill(false))
 
-      const winningLineIndex = matches.findIndex(match => match);
-      setWinningLineIndex(winningLineIndex);
+      const winningLineIndex = matches.findIndex((match) => match)
+      setWinningLineIndex(winningLineIndex)
 
-      await new Promise((resolve) => setTimeout(resolve, 200));
+      await new Promise((resolve) => setTimeout(resolve, 200))
 
       setShowMatches(matches)
 
@@ -71,7 +81,7 @@ export const GameBoard = () => {
       saveBalance()
 
       setAnimate(false)
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000))
     }
 
     setIsLoading(false)
@@ -103,22 +113,26 @@ export const GameBoard = () => {
       <Flex className="flex-col p-5 items-center w-full">
         <Flex className="gap-5 mb-4">
           <Flex className="gap-5">
-            <GambleButton text="Another?" size="lg" onClick={() => handleGamble(1)} isLoading={isLoading} />
-            <MultipleGambleButton text="auto" size="lg" onClick={() => handleGamble(numRounds)} isLoading={multipleIsLoading} onOpen={() => console.log('a')} />
+            <GambleButton
+              text="Another?"
+              size="lg"
+              onClick={() => handleGamble(1)}
+              isLoading={isLoading}
+            />
+            <MultipleGambleButton
+              text="auto"
+              size="lg"
+              onClick={onOpen}
+              isLoading={multipleIsLoading}
+            />
           </Flex>
         </Flex>
       </Flex>
       <Flex className="">
         <Flex className="justify-evenly gap-4">
-          <Text>
-            Balance: {balance}
-          </Text>
-          <Text>
-            Actual bet: {getActualBet()}
-          </Text>
-          <Text>
-            Rounds: {numRounds}
-          </Text>
+          <Text>Balance: {balance}</Text>
+          <Text>Actual bet: {getActualBet()}</Text>
+          <Text>Rounds: {numRounds}</Text>
         </Flex>
       </Flex>
     </Flex>

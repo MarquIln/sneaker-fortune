@@ -1,4 +1,13 @@
-import { Button, Modal as ChakraModal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter } from "@chakra-ui/react"
+import {
+  Button,
+  Modal as ChakraModal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+} from '@chakra-ui/react'
 
 interface ModalProps {
   isOpen: boolean
@@ -16,10 +25,10 @@ export function Modal({ isOpen, onClose }: ModalProps) {
           <p>Modal Content</p>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme='blue' mr={3} onClick={onClose}>
+          <Button colorScheme="blue" mr={3} onClick={onClose}>
             Close
           </Button>
-          <Button variant='ghost'>Secondary Action</Button>
+          <Button variant="ghost">Secondary Action</Button>
         </ModalFooter>
       </ModalContent>
     </ChakraModal>

@@ -1,4 +1,4 @@
-import type { Bet } from "@/types/bet";
+import type { Bet } from '@/types/bet'
 
 export const betValues: Bet = [
   { id: 1, value: 10 },
@@ -6,4 +6,4 @@ export const betValues: Bet = [
   { id: 3, value: 50 },
   { id: 4, value: 100 },
   { id: 5, value: 200 },
-];
+]

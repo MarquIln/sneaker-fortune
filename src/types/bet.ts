@@ -1,6 +1,6 @@
 interface BetItem {
-  id: number;
-  value: number;
+  id: number
+  value: number
 }
 
-export type Bet = BetItem[];
+export type Bet = BetItem[]

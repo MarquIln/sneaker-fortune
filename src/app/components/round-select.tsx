@@ -1,16 +1,19 @@
-import { Select as ChakraSelect, Flex, Text } from '@chakra-ui/react'
-import type { ChangeEvent } from 'react';
+import { Select as ChakraSelect } from '@chakra-ui/react'
+import type { ChangeEvent } from 'react'
 
 interface RoundSelectProps {
-  numRounds: number[];
-  onSelectNumRounds: (numRounds: number) => void;
+  numRounds: number[]
+  onSelectNumRounds: (numRounds: number) => void
 }
 
-export const RoundSelect = ({ numRounds, onSelectNumRounds }: RoundSelectProps) => {
+export const RoundSelect = ({
+  numRounds,
+  onSelectNumRounds,
+}: RoundSelectProps) => {
   const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
     const selectedValue = parseInt(event.target.value)
     onSelectNumRounds(selectedValue)
-  };
+  }
 
   return (
     <ChakraSelect
@@ -25,5 +28,5 @@ export const RoundSelect = ({ numRounds, onSelectNumRounds }: RoundSelectProps) 
         </option>
       ))}
     </ChakraSelect>
-  );
-};
+  )
+}
