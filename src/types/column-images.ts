@@ -6,4 +6,5 @@ export interface ColumnImage {
   animationKey: number
   linesWithMatches: boolean[]
   winningLineIndex: number | null
+  columnIndex: number
 }

@@ -1,7 +1,6 @@
 import { useStore } from '@/context';
 import { betValues } from '@/helpers/bet-values';
 import { Button as ChakraButton, Flex } from '@chakra-ui/react';
-import { TbPlayerPlayFilled } from "react-icons/tb"
 import { PiSneakerMoveBold } from "react-icons/pi";
 
 interface GambleButtonProps {
