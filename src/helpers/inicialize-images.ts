@@ -14,7 +14,7 @@ export const images: Image[] = [
   { id: 1, src: "/mistery-box.png", alt: "Mistery Box", multiplier: 15 },
   { id: 2, src: "/panda.png", alt: "Panda", multiplier: 1.5 },
   { id: 3, src: "/vans.png", alt: "VANS", multiplier: 1 },
-  // { id: 4, src: "/lvtrainer.png", alt: "LV Trainer", multiplier: 5 },
-  // { id: 5, src: "/havainas.webp", alt: "Havaianas", multiplier: 0.6 },
-  // { id: 6, src: "/vans-flame.png", alt: "VANS Flame", multiplier: 2 },
+  { id: 4, src: "/lvtrainer.png", alt: "LV Trainer", multiplier: 5 },
+  { id: 5, src: "/havainas.webp", alt: "Havaianas", multiplier: 0.6 },
+  { id: 6, src: "/vans-flame.png", alt: "VANS Flame", multiplier: 2 },
 ];
