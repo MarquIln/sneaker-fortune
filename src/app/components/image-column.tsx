@@ -1,31 +1,42 @@
-import type { ColumnImage } from "@/types/column-images";
-import { Image } from "@chakra-ui/react";
 import { motion } from "framer-motion";
+import { Image } from "@chakra-ui/react";
+import type { ColumnImage } from "@/types/column-images";
 
-const dropAnimation = {
-  hidden: { y: -200, opacity: 0 },
-  visible: { y: 0, opacity: 1, transition: { duration: 1 } },
-  exit: { y: 200, opacity: 1, transition: { duration: 1 } }
+const spinAnimation = {
+  spinning: { rotate: 360, transition: { repeat: Infinity, duration: 0.15 } },
+  stopped: { rotate: 0, transition: { duration: 0 } }
 };
 
-export const ImageColumn = ({ images, animate, animationKey }: ColumnImage) => {
+const blinkAnimation = {
+  blink: {
+    opacity: [1, 0.5, 1], 
+    transition: { repeat: Infinity, duration: 1 } 
+  },
+  normal: { opacity: 1, transition: { duration: 0 } }
+};
+
+export const ImageColumn = ({ images, animate, animationKey, linesWithMatches }: ColumnImage) => {
   return (
-    <div className={`flex flex-col gap-4`}>
+    <div className="flex flex-col gap-4">
       {images.map((image, index) => (
         <div
           key={`container-${index}`}
-          className="w-32 h-32 bg-gray-200 flex items-center justify-center border border-gray-400"
+          className="w-32 h-32 bg-gray-200 flex items-center justify-center border border-gray-400 rounded"
         >
           <motion.div
             key={`image-${index}-${animationKey}`}
-            initial="hidden"
-            animate={animate ? "hidden" : "visible"}
-            exit="exit"
-            variants={dropAnimation}
-            className="w-full h-full flex items-center justify-center"
+            initial="stopped"
+            animate={animate ? "spinning" : "stopped"}
+            variants={spinAnimation}
+            className={`flex items-center justify-center ${linesWithMatches[index] ? 'filter hue-rotate-0 brightness-0 sepia-100 saturate-100' : ''}`}
           >
             {image && (
-              <Image src={image.src} alt={image.alt} />
+              <motion.div
+                animate={linesWithMatches[index] ? "blink" : "normal"}
+                variants={blinkAnimation}
+              >
+                <Image src={image.src} alt={image.alt} className={linesWithMatches[index] ? 'opacity-75' : ''} />
+              </motion.div>
             )}
           </motion.div>
         </div>
