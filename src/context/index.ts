@@ -3,7 +3,7 @@ import { numberRounds } from '@/helpers/number-rounds'
 import { create } from 'zustand'
 
 const useStore = create<Player>((set, get) => ({
-  balance: 1000,
+  balance: 0,
   increaseBalance: (amount) => set((state) => ({
     balance: state.balance + amount,
   })),
@@ -26,7 +26,7 @@ const useStore = create<Player>((set, get) => ({
     bet.value
   ),
   numRounds: numberRounds[0],
-  actualBet: betValues[0].value,
+  actualBet: betValues[0].id,
   setActualBet: (index) => set({ actualBet: index }),
   setNumRounds: (rounds) => set({ numRounds: rounds }),
   getActualBet: () => get().betValues[get().actualBet],
