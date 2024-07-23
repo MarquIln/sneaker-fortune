@@ -1,28 +1,29 @@
-export const checkLines = (imagesArray: { src: string; alt: string }[][]) => {
-  const result: boolean[] = [false, false, false]; 
+import type { Image } from "@/types/images";
 
-  for (let i = 0; i < 3; i++) {
-    const imgLeft = imagesArray[0][i];
-    const imgMiddle = imagesArray[1][i];
-    const imgRight = imagesArray[2][i];
+export const checkLines = (imagesArray: Image[][]): boolean[] => {
+  const result: boolean[] = [false, false, false, false, false];
 
-    if (imgLeft.src === imgMiddle.src && imgMiddle.src === imgRight.src) {
-      result[i] = true; 
+  for (let i = 0; i < imagesArray[0].length; i++) {
+    if (
+      imagesArray[0][i].id === imagesArray[1][i].id &&
+      imagesArray[1][i].id === imagesArray[2][i].id
+    ) {
+      result[i] = true;
     }
   }
 
-  
-  const leftDiagonal = [imagesArray[0][0], imagesArray[1][1], imagesArray[2][2]];
-  const rightDiagonal = [imagesArray[0][2], imagesArray[1][1], imagesArray[2][0]];
-
-  if (leftDiagonal[0].src === leftDiagonal[1].src && leftDiagonal[1].src === leftDiagonal[2].src) {
-    result.push(true); 
-    console.log("leftDiagonal", result);
+  if (
+    imagesArray[0][0].id === imagesArray[1][1].id &&
+    imagesArray[1][1].id === imagesArray[2][2].id
+  ) {
+    result[3] = true;
   }
 
-  if (rightDiagonal[0].src === rightDiagonal[1].src && rightDiagonal[1].src === rightDiagonal[2].src) {
-    result.push(true); 
-    console.log("rightDiagonal", result);
+  if (
+    imagesArray[0][2].id === imagesArray[1][1].id &&
+    imagesArray[1][1].id === imagesArray[2][0].id
+  ) {
+    result[4] = true;
   }
 
   return result;
