@@ -3,7 +3,7 @@
 import { useStore } from "@/context"
 import { checkLines } from "@/helpers/check-lines"
 import type { Image } from "@/types/images"
-import { Box, Flex } from "@chakra-ui/react"
+import { Box, Flex, Text } from "@chakra-ui/react"
 import { useEffect, useState } from "react"
 import { initializeImages } from "../../helpers/inicialize-images"
 import { GambleButton } from "./gamble-button"
@@ -56,7 +56,6 @@ export const GameBoard = () => {
 
       setShowMatches(Array(5).fill(false))
 
-      // Determine the winning line
       const winningLineIndex = matches.findIndex(match => match);
       setWinningLineIndex(winningLineIndex);
 
@@ -72,7 +71,7 @@ export const GameBoard = () => {
       saveBalance()
 
       setAnimate(false)
-      await new Promise((resolve) => setTimeout(resolve, 200));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
     }
 
     setIsLoading(false)
@@ -96,20 +95,30 @@ export const GameBoard = () => {
               animationKey={animationKey}
               linesWithMatches={showMatches}
               winningLineIndex={winningLineIndex}
+              columnIndex={column.columnIndex}
             />
           </Box>
         ))}
       </Flex>
       <Flex className="flex-col p-5 items-center w-full">
-        <Flex className="flex-col gap-2 mb-4">
-          <p>Balance: ${balance}</p>
-          <button onClick={() => increaseBalance(100)}>Increase balance</button>
-        </Flex>
         <Flex className="gap-5 mb-4">
           <Flex className="gap-5">
             <GambleButton text="Another?" size="lg" onClick={() => handleGamble(1)} isLoading={isLoading} />
-            <MultipleGambleButton text="auto" size="lg" onClick={() => handleGamble(numRounds)} isLoading={multipleIsLoading} />
+            <MultipleGambleButton text="auto" size="lg" onClick={() => handleGamble(numRounds)} isLoading={multipleIsLoading} onOpen={() => console.log('a')} />
           </Flex>
+        </Flex>
+      </Flex>
+      <Flex className="">
+        <Flex className="justify-evenly gap-4">
+          <Text>
+            Balance: {balance}
+          </Text>
+          <Text>
+            Actual bet: {getActualBet()}
+          </Text>
+          <Text>
+            Rounds: {numRounds}
+          </Text>
         </Flex>
       </Flex>
     </Flex>
