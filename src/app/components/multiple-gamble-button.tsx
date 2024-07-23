@@ -9,7 +9,7 @@ interface MultipleGambleButtonProps {
 
 export const MultipleGambleButton = ({ onClick, size, text, isLoading }: MultipleGambleButtonProps) => {
   return (
-    <ChakraButton isLoading={isLoading} onClick={onClick} className='flex bg-green-800 w-16 h-16 rounded-full' size={size}>
+    <ChakraButton isLoading={isLoading} onClick={onClick} className='flex bg-blue-800 w-16 h-16 rounded-2xl' size={size}>
       {text}
     </ChakraButton>
   )

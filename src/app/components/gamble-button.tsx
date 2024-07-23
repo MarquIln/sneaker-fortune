@@ -2,6 +2,7 @@ import { useStore } from '@/context';
 import { betValues } from '@/helpers/bet-values';
 import { Button as ChakraButton, Flex } from '@chakra-ui/react';
 import { TbPlayerPlayFilled } from "react-icons/tb"
+import { PiSneakerMoveBold } from "react-icons/pi";
 
 interface GambleButtonProps {
   text: string | number
@@ -27,16 +28,15 @@ export const GambleButton = ({ onClick, size, text, isLoading }: GambleButtonPro
 
   return (
     <Flex className='gap-2 items-center'>
-      <ChakraButton className='bg-blue-500 w-10 h-10 rounded-full text-blue-900' onClick={handleDecrementBet}>
+      <ChakraButton className='bg-blue-900 w-10 h-10 rounded-full text-blue-500' onClick={handleDecrementBet}>
         -
       </ChakraButton>
       <ChakraButton isLoading={isLoading} onClick={onClick} className='flex bg-blue-900 w-16 h-16 rounded-full' size={size}>
-        <TbPlayerPlayFilled size={42} color='blue' />
+        <PiSneakerMoveBold size={42} color='blue' />
       </ChakraButton>
-      <ChakraButton className='bg-blue-500 w-10 h-10 rounded-full text-blue-900' onClick={handleIncrementBet}>
+      <ChakraButton className='bg-blue-900 w-10 h-10 rounded-full text-blue-500' onClick={handleIncrementBet}>
         +
       </ChakraButton>
-      {getActualBet()}
     </Flex>
   );
 }
