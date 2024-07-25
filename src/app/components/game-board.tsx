@@ -9,6 +9,7 @@ import { initializeImages } from '../../helpers/inicialize-images'
 import { GambleButton } from './gamble-button'
 import { ImageColumn } from './image-column'
 import { MultipleGambleButton } from './multiple-gamble-button'
+import { motion, useAnimation } from 'framer-motion'
 
 export const GameBoard = () => {
   const {
@@ -18,7 +19,7 @@ export const GameBoard = () => {
     saveBalance,
     loadBalance,
     getActualBet,
-    numRounds,
+    resetBalance,
   } = useStore()
   const [isLoading, setIsLoading] = useState(false)
   const [multipleIsLoading, setMultipleIsLoading] = useState(false)
@@ -27,12 +28,57 @@ export const GameBoard = () => {
   const [animate, setAnimate] = useState(false)
   const [animationKey, setAnimationKey] = useState(0)
   const [winningLineIndex, setWinningLineIndex] = useState<number | null>(null)
+  const [winnings, setWinnings] = useState(0)
 
   const { onOpen } = useDisclosure()
+
+  const balanceAnimation = useAnimation()
+  const winningsAnimation = useAnimation()
 
   useEffect(() => {
     loadBalance()
   }, [loadBalance])
+
+  useEffect(() => {
+    balanceAnimation.start({
+      opacity: [0, 1],
+      y: [-5, 0],
+      transition: { duration: 0.1 },
+    })
+  }, [balance, balanceAnimation])
+
+  useEffect(() => {
+    winningsAnimation.start({
+      opacity: [0, 1],
+      y: [-5, 0],
+      transition: { duration: 0.1 },
+    })
+  }, [winnings, winningsAnimation])
+
+  const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+
+  const calculateWinnings = (matches: boolean[], imagesArray: Image[][]) => {
+    return matches.reduce((totalWinnings, match, index) => {
+      if (match) {
+        let lineMultiplier = 1
+        if (index < 3) {
+          for (let rowIndex = 0; rowIndex < 3; rowIndex++) {
+            lineMultiplier *= imagesArray[rowIndex][index].multiplier
+          }
+        } else if (index === 3) {
+          for (let i = 0; i < 3; i++) {
+            lineMultiplier *= imagesArray[i][i].multiplier
+          }
+        } else if (index === 4) {
+          for (let i = 0; i < 3; i++) {
+            lineMultiplier *= imagesArray[i][2 - i].multiplier
+          }
+        }
+        totalWinnings += getActualBet() * lineMultiplier
+      }
+      return totalWinnings
+    }, 0)
+  }
 
   const handleGamble = async (rounds: number) => {
     if (balance <= 0) {
@@ -40,50 +86,45 @@ export const GameBoard = () => {
       return
     }
 
+    let totalWinnings = 0
+
     for (let i = 0; i < rounds; i++) {
       if (balance <= 0) break
 
-      if (rounds > 1) {
-        setMultipleIsLoading(true)
-      } else {
-        setIsLoading(true)
-      }
-
+      setIsLoading(rounds === 1)
+      setMultipleIsLoading(rounds > 1)
       setAnimate(true)
-      setAnimationKey((prevKey) => prevKey + 1)
+      setAnimationKey(prevKey => prevKey + 1)
 
-      await new Promise((resolve) => setTimeout(resolve, 500))
+      await delay(500)
 
       const newImages = initializeImages()
       setShuffledImages(newImages)
 
-      const imagesArray: Image[][] = [
-        newImages.left,
-        newImages.middle,
-        newImages.right,
-      ]
+      const imagesArray: Image[][] = [newImages.left, newImages.middle, newImages.right]
       const matches = checkLines(imagesArray)
 
       setShowMatches(Array(5).fill(false))
+      setWinningLineIndex(matches.findIndex(match => match))
 
-      const winningLineIndex = matches.findIndex((match) => match)
-      setWinningLineIndex(winningLineIndex)
-
-      await new Promise((resolve) => setTimeout(resolve, 200))
+      await delay(200)
 
       setShowMatches(matches)
 
-      if (matches.some((match) => match)) {
-        increaseBalance(getActualBet() * imagesArray.flat()[0].multiplier)
+      if (matches.some(match => match)) {
+        const winAmount = calculateWinnings(matches, imagesArray)
+        totalWinnings += winAmount
+        increaseBalance(winAmount)
       } else {
         decreaseBalance(getActualBet())
       }
       saveBalance()
 
       setAnimate(false)
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      await delay(200)
     }
 
+    setWinnings(totalWinnings)
     setIsLoading(false)
     setMultipleIsLoading(false)
   }
@@ -128,11 +169,19 @@ export const GameBoard = () => {
           </Flex>
         </Flex>
       </Flex>
-      <Flex className="">
-        <Flex className="justify-evenly gap-4">
-          <Text>Balance: {balance}</Text>
+      <Flex className="w-full justify-evenly border-2 border-blue-900 rounded-b-xl">
+        <Flex className="gap-5">
+          <motion.div
+            animate={balanceAnimation}
+          >
+            <Text>Balance: {balance.toFixed(2)}</Text>
+          </motion.div>
           <Text>Actual bet: {getActualBet()}</Text>
-          <Text>Rounds: {numRounds}</Text>
+          <motion.div
+            animate={winningsAnimation}
+          >
+            <Text>Winnings: {winnings}</Text>
+          </motion.div>
         </Flex>
       </Flex>
     </Flex>
