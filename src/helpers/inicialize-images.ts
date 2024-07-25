@@ -14,7 +14,7 @@ const generateWeightedImages = (images: Image[]): Image[] => {
   const weightedImages: Image[] = []
   const baseWeight = 10
 
-  images.forEach(image => {
+  images.forEach((image) => {
     const weight = Math.round(baseWeight / Math.log(image.multiplier + 1))
     for (let i = 0; i < weight; i++) {
       weightedImages.push(image)
@@ -30,7 +30,11 @@ export const initializeImages = (): {
   right: Image[]
 } => {
   const weightedImages = generateWeightedImages(images)
-  const shuffledImages = shuffleArray([...weightedImages, ...weightedImages, ...weightedImages])
+  const shuffledImages = shuffleArray([
+    ...weightedImages,
+    ...weightedImages,
+    ...weightedImages,
+  ])
   return {
     left: shuffledImages.slice(0, 3),
     middle: shuffledImages.slice(3, 6),
