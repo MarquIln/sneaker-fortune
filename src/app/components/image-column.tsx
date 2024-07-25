@@ -25,51 +25,68 @@ export const ImageColumn = ({
   animate,
   animationKey,
   linesWithMatches,
-  winningLineIndex,
   columnIndex,
 }: ColumnImage) => {
-  const isMainDiagonal = winningLineIndex === 3
-  const isAntiDiagonal = winningLineIndex === 4
+  const isMainDiagonal = linesWithMatches[3]
+  const isAntiDiagonal = linesWithMatches[4]
 
   return (
     <div className="flex flex-col gap-4">
-      {images.map((image, index) => (
-        <div
-          key={`container-${index}`}
-          className="w-32 h-32 bg-gray-200 flex items-center justify-center border border-gray-400 rounded relative"
-        >
-          {index === winningLineIndex && renderLine('0%', '50%', '100%', '50%')}
+      {images.map((image, index) => {
+        const isHorizontalMatch = linesWithMatches[index]
+        const isMainDiagonalMatch = isMainDiagonal && columnIndex === index
+        const isAntiDiagonalMatch = isAntiDiagonal && columnIndex + index === 2
 
-          {isMainDiagonal &&
-            columnIndex === index &&
-            renderLine('0%', '0%', '100%', '100%')}
-
-          {isAntiDiagonal &&
-            columnIndex + index === 2 &&
-            renderLine('100%', '0%', '0%', '100%')}
-
-          <motion.div
-            key={`image-${index}-${animationKey}`}
-            initial="stopped"
-            animate={animate ? 'spinning' : 'stopped'}
-            variants={spinAnimation}
-            className={`flex items-center justify-center`}
+        return (
+          <div
+            key={`container-${index}`}
+            className="w-32 h-32 bg-gray-200 flex items-center justify-center border border-gray-400 rounded relative"
           >
-            {image && (
-              <motion.div
-                animate={linesWithMatches[index] ? 'blink' : 'normal'}
-                variants={blinkAnimation}
-              >
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  className={linesWithMatches[index] ? 'opacity-75' : ''}
-                />
-              </motion.div>
+            {(isHorizontalMatch ||
+              isMainDiagonalMatch ||
+              isAntiDiagonalMatch) && (
+              <>
+                {isHorizontalMatch && renderLine('0%', '50%', '100%', '50%')}
+                {isMainDiagonalMatch && renderLine('0%', '0%', '100%', '100%')}
+                {isAntiDiagonalMatch && renderLine('100%', '0%', '0%', '100%')}
+              </>
             )}
-          </motion.div>
-        </div>
-      ))}
+
+            <motion.div
+              key={`image-${index}-${animationKey}`}
+              initial="stopped"
+              animate={animate ? 'spinning' : 'stopped'}
+              variants={spinAnimation}
+              className={`flex items-center justify-center`}
+            >
+              {image && (
+                <motion.div
+                  animate={
+                    isHorizontalMatch ||
+                    isMainDiagonalMatch ||
+                    isAntiDiagonalMatch
+                      ? 'blink'
+                      : 'normal'
+                  }
+                  variants={blinkAnimation}
+                >
+                  <Image
+                    src={image.src}
+                    alt={image.alt}
+                    className={
+                      isHorizontalMatch ||
+                      isMainDiagonalMatch ||
+                      isAntiDiagonalMatch
+                        ? 'opacity-75'
+                        : ''
+                    }
+                  />
+                </motion.div>
+              )}
+            </motion.div>
+          </div>
+        )
+      })}
     </div>
   )
 }
