@@ -10,6 +10,8 @@ import { GambleButton } from './gamble-button'
 import { ImageColumn } from './image-column'
 import { MultipleGambleButton } from './multiple-gamble-button'
 import { motion, useAnimation } from 'framer-motion'
+import { CalculateWinnings } from '@/helpers/calculate-winnings'
+import { Popover } from './popover'
 
 export const GameBoard = () => {
   const {
@@ -27,8 +29,9 @@ export const GameBoard = () => {
   const [animate, setAnimate] = useState(false)
   const [animationKey, setAnimationKey] = useState(0)
   const [winnings, setWinnings] = useState(0)
+  const [, setBets] = useState(0)
 
-  const { onOpen } = useDisclosure()
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   const balanceAnimation = useAnimation()
   const winningsAnimation = useAnimation()
@@ -62,44 +65,6 @@ export const GameBoard = () => {
   const delay = (ms: number) =>
     new Promise((resolve) => setTimeout(resolve, ms))
 
-  const allImagesEqual = (imagesArray: Image[][]) => {
-    const firstImage = imagesArray[0][0].id
-    return imagesArray.flat().every((img) => img.id === firstImage)
-  }
-
-  const calculateWinnings = (matches: boolean[], imagesArray: Image[][]) => {
-    let totalWinnings = 0
-    const baseMultiplier = 10
-
-    const allEqual = allImagesEqual(imagesArray)
-
-    totalWinnings = matches.reduce((sum, match, index) => {
-      if (match) {
-        let lineMultiplier = 1
-
-        if (index < 3) {
-          for (let rowIndex = 0; rowIndex < 3; rowIndex++) {
-            lineMultiplier = imagesArray[rowIndex][index].multiplier
-          }
-        } else if (index === 3) {
-          for (let i = 0; i < 3; i++) {
-            lineMultiplier = imagesArray[i][i].multiplier
-          }
-        } else if (index === 4) {
-          for (let i = 0; i < 3; i++) {
-            lineMultiplier = imagesArray[i][2 - i].multiplier
-          }
-        }
-
-        const roundWinnings = getActualBet() * lineMultiplier
-        sum += roundWinnings
-      }
-      return sum
-    }, 0)
-
-    return allEqual ? totalWinnings * baseMultiplier : totalWinnings
-  }
-
   const handleGamble = async (rounds: number) => {
     if (balance <= 0) {
       console.log("You don't have enough balance to gamble")
@@ -116,7 +81,7 @@ export const GameBoard = () => {
       setAnimate(true)
       setAnimationKey((prevKey) => prevKey + 1)
 
-      await delay(500)
+      await delay(200)
 
       const newImages = initializeImages()
       setShuffledImages(newImages)
@@ -135,7 +100,11 @@ export const GameBoard = () => {
       setShowMatches(matches)
 
       if (matches.some((match) => match)) {
-        const winAmount = calculateWinnings(matches, imagesArray)
+        const winAmount = CalculateWinnings(
+          matches,
+          imagesArray,
+          getActualBet(),
+        )
         totalWinnings += winAmount
         increaseBalance(winAmount)
       } else {
@@ -150,6 +119,11 @@ export const GameBoard = () => {
     setWinnings(totalWinnings)
     setIsLoading(false)
     setMultipleIsLoading(false)
+  }
+
+  const handleBetsChange = (newBets: number) => {
+    setBets(newBets)
+    handleGamble(newBets)
   }
 
   return (
@@ -183,6 +157,11 @@ export const GameBoard = () => {
               isLoading={multipleIsLoading}
             />
           </Flex>
+          <Popover
+            isOpen={isOpen}
+            onClose={onClose}
+            onBetsChange={handleBetsChange}
+          />
         </Flex>
       </Flex>
       <Flex className="w-full justify-evenly border-2 border-blue-900 rounded-b-xl">
