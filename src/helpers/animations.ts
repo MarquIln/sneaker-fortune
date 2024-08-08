@@ -1,7 +1,7 @@
 export const spinAnimation = {
   spinning: {
-    rotate: [0, 360],
-    opacity: [1, 0.5, 0],
+    y: [0, 100, 0], // Moves down and then resets to the original position
+    opacity: [1, 0.5, 1],
     transition: {
       repeat: Infinity,
       duration: 0.5,
@@ -9,7 +9,7 @@ export const spinAnimation = {
     },
   },
   stopped: {
-    rotate: 0,
+    y: 0,
     opacity: 1,
     transition: {
       duration: 0.5,
