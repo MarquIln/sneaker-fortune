@@ -1,5 +1,5 @@
 import { Flex, Text } from '@chakra-ui/react'
-import { GameBoard } from '../components/game-board'
+import { GameBoard } from '@/components/game-board'
 
 export default function Game() {
   return (
