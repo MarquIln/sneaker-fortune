@@ -1,4 +1,5 @@
 export interface Player {
+  login: () => void
   balance: number
   increaseBalance: (amount: number) => void
   decreaseBalance: (amount: number) => void

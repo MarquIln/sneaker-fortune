@@ -4,6 +4,7 @@ import type { Player } from '@/types/player'
 import { create } from 'zustand'
 
 const useStore = create<Player>((set, get) => ({
+  login: () => set({}),
   balance: 10000,
   increaseBalance: (amount) =>
     set((state) => ({
